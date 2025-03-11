@@ -97,14 +97,14 @@ Les données du panier doivent également être vidées.
 
 Afin de valider la commande, sur la route /order, les informations que le serveur doit recevoir doivent être :
 
-- Un objet contact avec les champs firstName, lastName, address, city et email
-- Le tableau contient un array de strings avec les ID des œuvres
+- Un objet contact avec les champs `firstName`, `lastName`, `address`, `city`, `email` et `products`
+- L'attribut `products` doit être un tableau de string contenant uniquement les id des produits
 
 Pour le moment, le serveur back est en phase de développement, pour les commandes le système ne prend en compte que l'envoi d'ID. Par la suite, il sera possible d'envoyer l'ID, les déclinaisons et les quantités.
 
 ## Informations importantes
 
-Pour l'ajout au panier, vous devez utiliser le localStorage pour stocker les données. Vous devez prendre en compte les informations suivantes :
+Pour l'ajout au panier, vous devez utiliser le `localStorage` pour stocker les données. Vous devez prendre en compte les informations suivantes :
 
 - Si l'article n'existe pas dans le panier, vous devez l'enregistrer dans le localStorage.
 - Si l'article existe déjà dans le panier, vous ne devez pas l'avoir en double dans le localStorage, vous devez modifier la quantité dans le localStorage.
