@@ -97,8 +97,8 @@ Les données du panier doivent également être vidées.
 
 Afin de valider la commande, sur la route /order, les informations que le serveur doit recevoir doivent être :
 
-- Un objet contact avec les champs `firstName`, `lastName`, `address`, `city`, `email` et `products`
-- L'attribut `products` doit être un tableau de string contenant uniquement les id des produits
+- Un objet contact avec les champs `firstName`, `lastName`, `address`, `city` et `email`
+- Un objet `products` qui doit être un tableau de string contenant uniquement les id des produits
 
 Pour le moment, le serveur back est en phase de développement, pour les commandes le système ne prend en compte que l'envoi d'ID. Par la suite, il sera possible d'envoyer l'ID, les déclinaisons et les quantités.
 
