@@ -1,6 +1,6 @@
 const articleContainer = document.querySelector(".products");
 
-async function chargerArticles(){ //Link API
+async function chargerArticles(){ //Fetch API
     try{
         const req = await fetch('http://localhost:3000/api/products/'); 
         if(!req.ok){
@@ -10,8 +10,8 @@ async function chargerArticles(){ //Link API
 
         //insersions fonctions nécessistant les datas
 
-        affichageArticles(datas)
-
+        affichageArticles(datas) // affichage article call
+        // console.log(datas)
     }catch(e){
         console.error("Error : ", e)
     }
@@ -24,7 +24,7 @@ const affichageArticles = (data) => { //Affichage Articles
         articleContainer.innerHTML += `
             <article>
                 <img src="${el.image}" alt="${el.shorttitle}">
-                <a href="product.html">Buy ${el.shorttitle}</a>
+                <a href="product.html?id=${el._id}">Buy ${el.shorttitle}</a>
             </article>
         `
     })
