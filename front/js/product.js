@@ -10,7 +10,7 @@ const smallDesc = document.querySelector(".detailoeuvre article > div > p");
 const price = document.querySelector("span"); 
 const buyBtn = document.querySelector(".button-buy");
 const bigDesc = document.querySelector("h2");
-const format = document.querySelector('format');
+const format = document.querySelector('#format');
 
 async function chargerArticles(){ //Fetch API
     try{
@@ -29,8 +29,6 @@ async function chargerArticles(){ //Fetch API
     }
 }
 
-chargerArticles();
-
 const affichageArticle = (data) => {
     const product = data.find(el => el._id === productId);
     console.log("Product : ", product)
@@ -39,11 +37,35 @@ const affichageArticle = (data) => {
         img.src = product.image; 
         title.innerText = product.titre;
         smallDesc.innerText = `${product.description.slice(0, 120)}...`
-        price.innerText = "";
         buyBtn.innerText = `Buy ${product.shorttitle}`;
         bigDesc.innerText = product.description;
-        format.innerHTML = `${ product.declinaisons.forEach(el => `<option>${el.taille}</option>`)}`
+        price.innerText = product.declinaisons[0].prix + "€"
+        let options = '';
+        product.declinaisons.forEach(el => {
+            options += `<option>${el.taille}</option>`;
+        });
+        format.innerHTML = options;
 
-        console.log()
+        format.addEventListener('change', () => {
+            switch(format.value){
+                case "20 x 20": 
+                    price.innerText = product.declinaisons[0].prix + "€"
+                    break;
+                case "30 x 20": 
+                    price.innerText = product.declinaisons[1].prix + "€"
+                    break;
+                case "30 x 30": 
+                    price.innerText = product.declinaisons[2].prix + "€"
+                    break;
+                case "40 x 30": 
+                    price.innerText = product.declinaisons[3].prix + "€"
+                    break;
+                default: 
+                    price.innerText = product.declinaisons[4].prix + "€"
+                    break;
+            }
+        })
     }
 }
+
+chargerArticles();
