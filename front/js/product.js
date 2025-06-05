@@ -12,7 +12,7 @@ const buyBtn = document.querySelector(".button-buy");
 const bigDesc = document.querySelector("h2");
 const format = document.querySelector('#format');
 const titlePage = document.querySelector("title");
-console.log(titlePage)
+const inputQte = document.querySelector('#quantity')
 
 async function chargerArticles(){ //Fetch API
     try{
@@ -49,7 +49,7 @@ const affichageArticle = (data) => {
 
     let options = '';
     product.declinaisons.forEach(el => {
-        options += `<option>${el.taille}</option>`;
+        options += `<option value="${el.taille}">${el.taille}</option>`;
     });
     format.innerHTML = options;
 
@@ -71,6 +71,33 @@ const affichageArticle = (data) => {
                 price.innerText = `${product.declinaisons[4].prix}€`
                 break;
         }
+    })
+
+    buyBtn.addEventListener('click', () => { //LOCAL STORAGE
+        const key = `${product._id}-${format.value}`; //localStorage key
+        const addQte = parseInt(inputQte.value); // quantité présente dans l'input
+        console.log('Format sélectionné :', format.value);
+
+        articleJSON = localStorage.getItem(key); // null/chaine JSON selon si l'article séléctionné est déja présent ou non
+        
+        if(!articleJSON){ //si l'article n'est pas présent
+            const newItem = { //création de l'objet de stockage
+                nom: product.shorttitle,
+                image: product.image,
+                format: format.value,
+                quantite: addQte,
+            };
+
+            localStorage.setItem(key, JSON.stringify(newItem)); // ACTUALISATION
+        }else if(articleJSON){ // si l'article est déja présent
+
+            const item = JSON.parse(articleJSON) // Récupération du JSON 
+            item.quantite += addQte // Ajout de la nouvelle quantité
+            localStorage.setItem(key, JSON.stringify(item)); // ACTUALISATION
+        }
+        
+        console.log(localStorage)
+        
     })
 }
 

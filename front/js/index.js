@@ -11,7 +11,7 @@ async function chargerArticles(){ //Fetch API
         //insersions fonctions nécessistant les datas
 
         affichageArticles(datas) // affichage article call
-        // console.log(datas)
+
     }catch(e){
         console.error("Error : ", e)
     }
