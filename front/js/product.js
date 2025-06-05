@@ -76,16 +76,16 @@ const affichageArticle = (data) => {
     buyBtn.addEventListener('click', () => { //LOCAL STORAGE
         const key = `${product._id}-${format.value}`; //localStorage key
         const addQte = parseInt(inputQte.value); // quantité présente dans l'input
-        console.log('Format sélectionné :', format.value);
 
         articleJSON = localStorage.getItem(key); // null/chaine JSON selon si l'article séléctionné est déja présent ou non
         
         if(!articleJSON){ //si l'article n'est pas présent
             const newItem = { //création de l'objet de stockage
-                nom: product.shorttitle,
+                id: product._id,
+                title: product.titre,
                 image: product.image,
                 format: format.value,
-                quantite: addQte,
+                quantity: addQte,
             };
 
             localStorage.setItem(key, JSON.stringify(newItem)); // ACTUALISATION
