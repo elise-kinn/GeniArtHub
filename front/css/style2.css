@@ -83,7 +83,7 @@ form{
 }
 
 #panier{
-    min-height : 500px;
+    min-height : 200px;
 
     .article-article{
         display: flex;
@@ -109,5 +109,27 @@ form{
 
     .suppr{
         text-decoration:underline;
+    }
+
+    #empty-cart{
+        text-align: center;
+        font-size: 30px;
+        padding-top : 80px;
+    }
+}
+
+dialog{
+    padding: 39px 119px;
+    font-size: 20px;
+    text-align: center;
+
+    button{
+        background: #EE7F43;
+        color:#FFF;
+        text-align: center;
+        font-family: 'Source Sans 3', sans-serif;
+        font-size: 32px;
+        border : none;
+        padding : 5px 23px
     }
 }

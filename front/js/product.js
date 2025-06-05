@@ -82,7 +82,10 @@ const affichageArticle = (data) => {
 
     buyBtn.addEventListener('click', () => { //LOCAL STORAGE
         const key = `${product._id}-${format.value}`; //localStorage key
-        const addQte = parseInt(inputQte.value); // quantité présente dans l'input
+        let addQte = parseInt(inputQte.value); // quantité présente dans l'input
+
+        if(addQte > 100){addQte = 100} // Restriction quantité
+        else if(addQte < 0){addQte = 0}
 
         articleJSON = localStorage.getItem(key); // null/chaine JSON selon si l'article séléctionné est déja présent ou non
         
@@ -100,9 +103,13 @@ const affichageArticle = (data) => {
 
             const item = JSON.parse(articleJSON) // Récupération du JSON 
             item.quantity += addQte // Ajout de la nouvelle quantité
+
+            if(item.quantity > 100){item.quantity = 100} // Restriction quantité
+            else if(item.quantity < 0){item.quantity = 0}
+
             localStorage.setItem(key, JSON.stringify(item)); // ACTUALISATION
         }
-        // console.log(localStorage)
+        console.log(localStorage)
         
     })
 }

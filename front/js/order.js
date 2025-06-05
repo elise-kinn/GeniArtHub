@@ -21,11 +21,13 @@ chargerArticles() //Appel du fetch
 
 const buyBtn = document.querySelector('#buy-btn');
 const cartContainer = document.querySelector('#panier');
-const totalCommande = document.querySelector('#resume-commande')
+const totalCommande = document.querySelector('#resume-commande');
+const main = document.querySelector('main');
 
 const cartItems = []; // Panier
-let supprButtons
-let totalPrice = 0 // prix total
+let supprButtons;
+let totalPrice = 0; // prix total
+let totalQte = 0; // quantité d'article total
 
 // ----------------------------------------------------FONCTION PRINCIPALE
 
@@ -33,6 +35,10 @@ const showCart = (data) => { //Affichage panier
     //Réinitialisation visuelle
     cartItems.length = 0; 
     cartContainer.innerHTML = "";
+
+    if(localStorage.length === 0){ // si aucun article dans le panier
+        cartContainer.innerHTML = "<p id='empty-cart'>Vous n'avez aucun article dans votre panier :(</p>";
+    }
 
     // Boucle pour chaque élement du localStorage
     for(let i = 0; i < localStorage.length; i++){
@@ -81,12 +87,13 @@ const deleteArticle = (data, ) => {
 
 //AFFICHAGE TOTAL
 const showTotal = () =>{ // Affichage du total
-    totalCommande.innerText = `X articles pour un montant de ${parseInt(totalPrice).toFixed(2)} €`
+    totalCommande.innerText = `${totalQte} articles pour un montant de ${parseInt(totalPrice).toFixed(2)} €`
 }
 
 // AFFICHAGE DES PRIX
 const showPrice = (dataFromAPI, cartItems) => { //Affichage des prix
-    totalPrice = 0
+    totalPrice = 0;
+    totalQte = 0;
 
     cartItems.forEach((item, index) => {
         const match = dataFromAPI.find(el => el._id === item.id); //match id ?
@@ -101,6 +108,7 @@ const showPrice = (dataFromAPI, cartItems) => { //Affichage des prix
                 if(priceElement){
                     priceElement.innerText = `${price} €`; //Affichage
                     totalPrice += price
+                    totalQte += item.quantity
                     console.log(totalPrice)
                 }
             }
@@ -109,6 +117,55 @@ const showPrice = (dataFromAPI, cartItems) => { //Affichage des prix
 }
 
 //PRUCHASE BTN
-buyBtn.addEventListener('click', () => {
-    localStorage.clear(); //Delete localStorage
+buyBtn.addEventListener('click', (e) => {
+    e.preventDefault()
+    //récupération des valeurs des inputs
+    const nameInput = document.querySelector('#name-input');
+    const surnameInput = document.querySelector('#surname-input');
+    const adressInput = document.querySelector('#address-input');
+    const emailInput = document.querySelector('#email-input');
+    const cityInput = document.querySelector('#city-input');
+
+    if(nameInput.value.trim().length <= 2){
+        alert("Votre prénom doit faire plus de 2 lettres :(");
+        return
+    }
+
+    if(surnameInput.value.trim().length <= 2){
+        alert("Votre nom doit faire plus de 2 lettres :(");
+        return
+    }
+
+    if(adressInput.value.trim().length <= 10){
+        alert("Votre adresse doit faire plus de 10 lettres :(");
+        return
+    }
+
+    if(cityInput.value.trim().length <= 3){
+        alert("Votre ville doit faire plus de 3 lettres :(");
+        return
+    }
+
+    if(emailInput.value.trim() === ""){
+        alert("Veuillez entrer votre adresse :(");
+        return
+    }
+
+    main.innerHTML += `
+        <dialog>
+            <p>La commande a été passée avec succcès.</p>
+            <p>Votre numéro de commande : </p>
+            <button id="close-modal">Fermer la fenêtre</button>
+        </dialog>
+    `
+
+    const dialog = document.querySelector("dialog");
+    const closeModal = document.querySelector("#close-modal");
+
+    dialog.showModal();
+    closeModal.addEventListener('click', () => {
+        dialog.close();
+    })
+
+    // localStorage.clear(); //Delete localStorage
 })
