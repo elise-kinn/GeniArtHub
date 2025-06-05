@@ -1,6 +1,5 @@
-const articleContainer = document.querySelector(".products");
-
-async function chargerArticles(){ //Fetch API
+// ------------------------------------------------------ FETCH API 
+async function chargerArticles(){
     try{
         const req = await fetch('http://localhost:3000/api/products/'); 
         if(!req.ok){
@@ -10,16 +9,21 @@ async function chargerArticles(){ //Fetch API
 
         //insersions fonctions nécessistant les datas
 
-        affichageArticles(datas) // affichage article call
+        affichageArticles(datas) // appel affichage article
 
     }catch(e){
         console.error("Error : ", e)
     }
 }
 
-chargerArticles();
+chargerArticles(); //Appel fetch API
 
-const affichageArticles = (data) => { //Affichage Articles
+//----------------------------------------------------- COSNTANTES 
+const articleContainer = document.querySelector(".products");
+
+// ---------------------------------------------------- FONCTION
+//AfFICHAGE DES ARTICLES
+const affichageArticles = (data) => { 
     data.forEach((el) => {
         articleContainer.innerHTML += `
             <article>
