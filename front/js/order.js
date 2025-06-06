@@ -85,11 +85,6 @@ const deleteArticle = (data, ) => {
   });
 }
 
-//AFFICHAGE TOTAL
-const showTotal = () =>{ // Affichage du total
-    totalCommande.innerText = `${totalQte} articles pour un montant de ${parseInt(totalPrice).toFixed(2)} €`
-}
-
 // AFFICHAGE DES PRIX
 const showPrice = (dataFromAPI, cartItems) => { //Affichage des prix
     totalPrice = 0;
@@ -116,6 +111,11 @@ const showPrice = (dataFromAPI, cartItems) => { //Affichage des prix
     })
 }
 
+//AFFICHAGE TOTAL
+const showTotal = () =>{ // Affichage du total
+    totalCommande.innerText = `${totalQte} articles pour un montant de ${totalPrice.toFixed(2)} €`
+}
+
 //PRUCHASE BTN
 buyBtn.addEventListener('click', (e) => {
     e.preventDefault()
@@ -126,34 +126,54 @@ buyBtn.addEventListener('click', (e) => {
     const emailInput = document.querySelector('#email-input');
     const cityInput = document.querySelector('#city-input');
 
+    //récupération des balises pour messages d'erreurs
+    const nameMsg = document.querySelector('#name-return');
+    const surnameMsg = document.querySelector('#surname-return');
+    const adressMsg = document.querySelector('#address-return');
+    const cityMsg = document.querySelector('#city-return');
+    const emailMsg = document.querySelector('#email-return');
+
+    const regex = /^[A-Za-zÀ-ÿ\- ]+$/;
+
+    if(localStorage.length === 0){
+        alert("Vous ne pouvez pas passer commande sans article dans votre panier :(");
+        return
+    }
+
     if(nameInput.value.trim().length <= 2){
-        alert("Votre prénom doit faire plus de 2 lettres :(");
+        nameMsg.innerText = "Votre prénom doit faire plus de 2 lettres :("
+        return
+    }else if(!regex.test(nameInput.value.trim())){
+        nameMsg.innerText = "Votre prénom ne doit pas contenir de caractères spéciaux :("
         return
     }
 
     if(surnameInput.value.trim().length <= 2){
-        alert("Votre nom doit faire plus de 2 lettres :(");
+        surnameMsg.innerText = "Votre nom doit faire plus de 2 lettres :("
+        return
+    }else if(!regex.test(nameInput.value.trim())){
+        nameMsg.innerText = "Votre nom ne doit pas contenir de caractères spéciaux :("
         return
     }
 
     if(adressInput.value.trim().length <= 10){
-        alert("Votre adresse doit faire plus de 10 lettres :(");
+        adressMsg.innerText = "Votre adresse doit faire plus de 10 lettres :("
         return
     }
 
     if(cityInput.value.trim().length <= 3){
-        alert("Votre ville doit faire plus de 3 lettres :(");
+        cityMsg.innerText = "Votre ville doit faire plus de 3 lettres :("
         return
     }
 
     if(emailInput.value.trim() === ""){
-        alert("Veuillez entrer votre adresse :(");
+        emailMsg.innerText = "Veuillez entrer votre adresse :("
         return
     }
 
     main.innerHTML += `
         <dialog>
-            <p>La commande a été passée avec succcès.</p>
+            <p>La commande a été passée avec succcès !</p>
             <p>Votre numéro de commande : </p>
             <button id="close-modal">Fermer la fenêtre</button>
         </dialog>
@@ -167,5 +187,6 @@ buyBtn.addEventListener('click', (e) => {
         dialog.close();
     })
 
-    // localStorage.clear(); //Delete localStorage
+    localStorage.clear(); //Delete localStorage
+    const cartItems = [];
 })

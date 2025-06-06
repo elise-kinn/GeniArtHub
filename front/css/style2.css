@@ -38,9 +38,16 @@ form{
     max-width: 800px;
     margin : auto;
     gap : 20px;
-    row-gap: 30px;
+    row-gap: 5px;
     margin-top : 25px;
     margin-bottom : 25px;
+
+    p{
+        height : 20px; 
+        margin : 0; 
+        color : red; 
+        font-weight: 700;
+    }
 
     input{
         width : calc(100% - 10px); 
@@ -60,7 +67,8 @@ form{
         grid-column: 1/-1;
         width : fit-content;
         margin : auto;
-        padding : 5px 23px
+        padding : 5px 23px; 
+        margin-top : 25px;
     }
 }
 
@@ -109,6 +117,7 @@ form{
 
     .suppr{
         text-decoration:underline;
+        cursor: pointer;
     }
 
     #empty-cart{

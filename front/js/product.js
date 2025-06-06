@@ -36,6 +36,7 @@ const bigDesc = document.querySelector("h2");
 const format = document.querySelector('#format');
 const titlePage = document.querySelector("title");
 const inputQte = document.querySelector('#quantity')
+const valideMsg = document.querySelector("#ajout-valide")
 
 // -----------------------------------------------------FONCTION
 const affichageArticle = (data) => {
@@ -78,6 +79,7 @@ const affichageArticle = (data) => {
                 price.innerText = `${product.declinaisons[4].prix}€`
                 break;
         }
+        cleanMsg()
     })
 
     buyBtn.addEventListener('click', () => { //LOCAL STORAGE
@@ -90,6 +92,7 @@ const affichageArticle = (data) => {
         articleJSON = localStorage.getItem(key); // null/chaine JSON selon si l'article séléctionné est déja présent ou non
         
         if(!articleJSON){ //si l'article n'est pas présent
+
             const newItem = { //création de l'objet de stockage
                 id: product._id,
                 title: product.titre,
@@ -99,6 +102,7 @@ const affichageArticle = (data) => {
             };
 
             localStorage.setItem(key, JSON.stringify(newItem)); // ACTUALISATION
+
         }else if(articleJSON){ // si l'article est déja présent
 
             const item = JSON.parse(articleJSON) // Récupération du JSON 
@@ -108,8 +112,20 @@ const affichageArticle = (data) => {
             else if(item.quantity < 0){item.quantity = 0}
 
             localStorage.setItem(key, JSON.stringify(item)); // ACTUALISATION
+
         }
+
+        valideMsg.innerText = "Votre séléction a bien été ajoutée à votre panier !"
         console.log(localStorage)
         
     })
 }
+
+//--------------------------------------------------------ANNEXE
+
+//Supprime le message de l'ajout dans le panier
+const cleanMsg = () => {
+    valideMsg.innerText = ""
+}
+
+inputQte.addEventListener('change', cleanMsg)

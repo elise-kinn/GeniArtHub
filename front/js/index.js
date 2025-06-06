@@ -18,7 +18,7 @@ async function chargerArticles(){
 
 chargerArticles(); //Appel fetch API
 
-//----------------------------------------------------- COSNTANTES 
+//----------------------------------------------------- CONSTANTES 
 const articleContainer = document.querySelector(".products");
 
 // ---------------------------------------------------- FONCTION

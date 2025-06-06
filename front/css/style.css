@@ -278,3 +278,10 @@ article > div > div.price > p {
     font-weight: 400;
     line-height: normal;
 }
+
+#ajout-valide{
+    color: #EE7F43;
+    font-size: 20px;
+    font-weight: 700;
+    
+}
