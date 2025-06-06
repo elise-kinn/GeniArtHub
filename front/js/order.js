@@ -1,3 +1,5 @@
+let apiData = [];
+
 //-------------------------------------------------FETCH API
 async function chargerArticles(){ //Fetch API
     try{
@@ -6,7 +8,7 @@ async function chargerArticles(){ //Fetch API
             throw new Error("Error HTTP : ", req.status);
         }
         const datas = await req.json();
-
+        apiData = datas;
         //insersions fonctions nécessistant les datas
         showCart(datas)
 
@@ -24,7 +26,7 @@ const cartContainer = document.querySelector('#panier');
 const totalCommande = document.querySelector('#resume-commande');
 const main = document.querySelector('main');
 
-const cartItems = []; // Panier
+let cartItems = []; // Panier
 let supprButtons;
 let totalPrice = 0; // prix total
 let totalQte = 0; // quantité d'article total
@@ -38,6 +40,7 @@ const showCart = (data) => { //Affichage panier
 
     if(localStorage.length === 0){ // si aucun article dans le panier
         cartContainer.innerHTML = "<p id='empty-cart'>Vous n'avez aucun article dans votre panier :(</p>";
+        return 
     }
 
     // Boucle pour chaque élement du localStorage
@@ -73,10 +76,9 @@ const showCart = (data) => { //Affichage panier
 //---------------------------------------------------FONCTIONS ANNEXES
 
 // BOUTON SUPPRIMER
-const deleteArticle = (data, ) => { 
+const deleteArticle = (data) => { 
     supprButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-        cartContainer.innerHTML = ""
         const article = btn.closest('.article-article');
         const key = article.dataset.key; // récupère la clé unique
         localStorage.removeItem(key); //supression de l'article
@@ -119,74 +121,83 @@ const showTotal = () =>{ // Affichage du total
 //PRUCHASE BTN
 buyBtn.addEventListener('click', (e) => {
     e.preventDefault()
-    //récupération des valeurs des inputs
-    const nameInput = document.querySelector('#name-input');
-    const surnameInput = document.querySelector('#surname-input');
-    const adressInput = document.querySelector('#address-input');
-    const emailInput = document.querySelector('#email-input');
-    const cityInput = document.querySelector('#city-input');
-
-    //récupération des balises pour messages d'erreurs
-    const nameMsg = document.querySelector('#name-return');
-    const surnameMsg = document.querySelector('#surname-return');
-    const adressMsg = document.querySelector('#address-return');
-    const cityMsg = document.querySelector('#city-return');
-    const emailMsg = document.querySelector('#email-return');
-
-    const regex = /^[A-Za-zÀ-ÿ\- ]+$/;
 
     if(localStorage.length === 0){
         alert("Vous ne pouvez pas passer commande sans article dans votre panier :(");
         return
     }
 
-    if(nameInput.value.trim().length <= 2){
-        nameMsg.innerText = "Votre prénom doit faire plus de 2 lettres :("
-        return
-    }else if(!regex.test(nameInput.value.trim())){
-        nameMsg.innerText = "Votre prénom ne doit pas contenir de caractères spéciaux :("
+    const loopArray = [
+        {
+            label : "prémon",
+            input : document.querySelector('#name-input'),
+            msg : document.querySelector('#name-return'),
+            min : 2,
+            regex : /^[A-Za-zÀ-ÿ\- ]+$/
+        },
+        {
+            label : "nom",
+            input : document.querySelector('#surname-input'),
+            msg : document.querySelector('#surname-return'),
+            min : 2,
+            regex : /^[A-Za-zÀ-ÿ\- ]+$/
+        },
+        {
+            label : "adresse",
+            input : document.querySelector('#address-input'),
+            msg : document.querySelector('#address-return'),
+            min : 10,
+            regex : ""
+        },
+        {
+            label : "email",
+            input : document.querySelector('#email-input'),
+            msg : document.querySelector('#email-return'),
+            min : 5,
+            regex : /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        },
+        {
+            label : "ville",
+            input : document.querySelector('#city-input'),
+            msg : document.querySelector('#city-return'),
+            min : 3,
+            regex : ""
+        },
+    ]
+
+    let isError = false
+
+    for(const el of loopArray){ //Boucle de vérification pour chaque input
+        inputValue = el.input.value.trim();
+
+        if(inputValue.length <= el.min){
+            el.msg.innerText  = `Votre ${el.label} doit faire plus de ${el.min} lettres :(`
+            isError = true
+        }
+
+        if(el.regex !== "" && !el.regex.test(inputValue)){
+            el.msg.innerText  = `Votre ${el.label} contient des caractères invalides :(`
+        }
+    }
+    
+    if(isError){
         return
     }
 
-    if(surnameInput.value.trim().length <= 2){
-        surnameMsg.innerText = "Votre nom doit faire plus de 2 lettres :("
-        return
-    }else if(!regex.test(nameInput.value.trim())){
-        nameMsg.innerText = "Votre nom ne doit pas contenir de caractères spéciaux :("
-        return
-    }
-
-    if(adressInput.value.trim().length <= 10){
-        adressMsg.innerText = "Votre adresse doit faire plus de 10 lettres :("
-        return
-    }
-
-    if(cityInput.value.trim().length <= 3){
-        cityMsg.innerText = "Votre ville doit faire plus de 3 lettres :("
-        return
-    }
-
-    if(emailInput.value.trim() === ""){
-        emailMsg.innerText = "Veuillez entrer votre adresse :("
-        return
-    }
-
-    main.innerHTML += `
-        <dialog>
-            <p>La commande a été passée avec succcès !</p>
-            <p>Votre numéro de commande : </p>
-            <button id="close-modal">Fermer la fenêtre</button>
-        </dialog>
-    `
-
-    const dialog = document.querySelector("dialog");
+    //Modal de confirmation de commande
+    const dialog = document.querySelector("#confirmation-modal");
     const closeModal = document.querySelector("#close-modal");
 
     dialog.showModal();
+
     closeModal.addEventListener('click', () => {
         dialog.close();
     })
 
-    localStorage.clear(); //Delete localStorage
-    const cartItems = [];
+    //Delete localStorage + visu
+    localStorage.clear(); 
+    cartItems.length = 0;
+    cartContainer.innerHTML = "";
+    totalCommande.innerText = ""
+    showCart(apiData)
 })
