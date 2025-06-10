@@ -1,10 +1,8 @@
 //---------------------------------------------------RECUPERATION DE L'ID DE L'URL DE L'HTML
-// window.location.search --> Récupère ce qu'il y a après le ? de l'ULR
-// URLSearchParams --> Objet pour lire les paramètres (ici l'ID)
-const params = new URLSearchParams(window.location.search); 
-//params.get('id') --> extraie la valeure associée à l'id, stokéer dans productId
-const productId = params.get('id');
 
+const params = new URLSearchParams(window.location.search); 
+const productId = params.get('id');
+// console.log(window)
 
 //-------------------------------------------------------FETCH API
 async function chargerArticles(){ //Fetch API
@@ -18,7 +16,7 @@ async function chargerArticles(){ //Fetch API
         //insersions fonctions nécessistant les datas
         console.log(datas)
         affichageArticle(datas) // affichage article call
-        // console.log(datas)
+
     }catch(e){
         console.error("Error : ", e)
     }
@@ -31,16 +29,17 @@ const img = document.querySelector("figure img");
 const title = document.querySelector("h1"); 
 const smallDesc = document.querySelector(".detailoeuvre article > div > p"); 
 const price = document.querySelector("span"); 
-const buyBtn = document.querySelector(".button-buy");
-const bigDesc = document.querySelector("h2");
+const bigDesc = document.querySelector("aside p");
 const format = document.querySelector('#format');
 const titlePage = document.querySelector("title");
-const inputQte = document.querySelector('#quantity')
-const valideMsg = document.querySelector("#ajout-valide")
+const valideMsg = document.querySelector("#ajout-valide");
+
+const buyBtn = document.querySelector(".button-buy");
+const inputQte = document.querySelector('#quantity');
 
 // -----------------------------------------------------FONCTION
 const affichageArticle = (data) => {
-    const product = data.find(el => el._id === productId); // Récupération en fonction de l'url
+    const product = data.find(el => el._id === productId); // Récupération des données en fonction de l'url
 
     if(!product){
         return;
@@ -55,7 +54,7 @@ const affichageArticle = (data) => {
     bigDesc.innerText = product.description;
     price.innerText = `${product.declinaisons[0].prix}€`
 
-    let options = '';
+    let options = ''; //<select>
     product.declinaisons.forEach(el => {
         options += `<option value="${el.taille}">${el.taille}</option>`;
     });
@@ -79,21 +78,30 @@ const affichageArticle = (data) => {
                 price.innerText = `${product.declinaisons[4].prix}€`
                 break;
         }
-        cleanMsg()
+        cleanMsg();
     })
 
     buyBtn.addEventListener('click', () => { //LOCAL STORAGE
         const key = `${product._id}-${format.value}`; //localStorage key
         let addQte = parseInt(inputQte.value); // quantité présente dans l'input
 
-        if(addQte > 100){addQte = 100} // Restriction quantité
-        else if(addQte < 0){addQte = 0}
+        // Restriction quantité
+        if(addQte > 100){
+            addQte = 100; 
+            valideMsg.innerText = "Votre quantité doit se trouver entre 1 et 100 :("; 
+            return
+        }
+        else if(addQte < 0){
+            addQte = 0; 
+            valideMsg.innerText = "Votre quantité doit se trouver entre 1 et 100 :("; 
+            return
+        }
 
         articleJSON = localStorage.getItem(key); // null/chaine JSON selon si l'article séléctionné est déja présent ou non
         
         if(!articleJSON){ //si l'article n'est pas présent
 
-            const newItem = { //création de l'objet de stockage
+            const newItem = { 
                 id: product._id,
                 title: product.titre,
                 image: product.image,
@@ -108,8 +116,11 @@ const affichageArticle = (data) => {
             const item = JSON.parse(articleJSON) // Récupération du JSON 
             item.quantity += addQte // Ajout de la nouvelle quantité
 
-            if(item.quantity > 100){item.quantity = 100} // Restriction quantité
-            else if(item.quantity < 0){item.quantity = 0}
+            if(item.quantity > 100){
+                item.quantity = 100;
+                valideMsg.innerText = "Vous ne pouvez pas acheter plus de 100 articles.";
+                return
+            } // Restriction quantité
 
             localStorage.setItem(key, JSON.stringify(item)); // ACTUALISATION
 

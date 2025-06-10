@@ -24,9 +24,8 @@ chargerArticles() //Appel du fetch
 const buyBtn = document.querySelector('#buy-btn');
 const cartContainer = document.querySelector('#panier');
 const totalCommande = document.querySelector('#resume-commande');
-const main = document.querySelector('main');
 
-let cartItems = []; // Panier
+const cartItems = []; // Panier
 let supprButtons;
 let totalPrice = 0; // prix total
 let totalQte = 0; // quantité d'article total
@@ -46,9 +45,9 @@ const showCart = (data) => { //Affichage panier
     // Boucle pour chaque élement du localStorage
     for(let i = 0; i < localStorage.length; i++){
         const key = localStorage.key(i); 
-        const storage = JSON.parse(localStorage.getItem(key))
+        const storage = JSON.parse(localStorage.getItem(key));
         cartItems.push(storage);
-        console.log(storage)
+        console.log(storage);
 
         //affichage HTML
         cartContainer.innerHTML += `
@@ -79,7 +78,7 @@ const showCart = (data) => { //Affichage panier
 const deleteArticle = (data) => { 
     supprButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-        const article = btn.closest('.article-article');
+        const article = btn.closest('.article-article'); //article le plus proche depuis le btn
         const key = article.dataset.key; // récupère la clé unique
         localStorage.removeItem(key); //supression de l'article
         showCart(data); // recharge le panier
@@ -177,6 +176,7 @@ buyBtn.addEventListener('click', (e) => {
 
         if(el.regex !== "" && !el.regex.test(inputValue)){
             el.msg.innerText  = `Votre ${el.label} contient des caractères invalides :(`
+            isError = true
         }
     }
     

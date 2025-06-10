@@ -32,5 +32,5 @@ const affichageArticles = (data) => {
             </article>
         `
     })
+    
 }
-
