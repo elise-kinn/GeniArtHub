@@ -1,7 +1,7 @@
 // ------------------------------------------------------ FETCH API 
 async function chargerArticles(){
     try{
-        const req = await fetch('http://localhost:3000/api/products/'); 
+        const req = await fetch('http://localhost:3000/api/products/'); //Requète HTTP vers l'API
         if(!req.ok){
             throw new Error("Error HTTP : ", req.status);
         }
